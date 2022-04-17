@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+    web:
+        build:
+          context: .
+          dockerfile: DevDockerfile
+        container_name: temir-backend
+        command: sh -c "python manage.py runserver 0.0.0.0:8000"
+        volumes:
+            - .:/app
+            - media:/app/media/
+            - static:/app/static/
+        ports:
+            - "8000:8000"
+        depends_on:
+            - pgdb
+        environment:
+          - POSTGRES_DB=temirBackend
+          - POSTGRES_USER=temirBackend
+          - POSTGRES_PASSWORD=temirBackend
+          - POSTGRES_HOST=pgdb
+    pgdb:
+        image: postgres:latest
+        container_name: temirBackend
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+          - POSTGRES_DB=temirBackend
+          - POSTGRES_USER=temirBackend
+          - POSTGRES_PASSWORD=temirBackend
+volumes:
+  postgres_data:
+  static:
+  media:
